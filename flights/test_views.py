@@ -62,3 +62,19 @@ class FlightViewTestCase(TestCase):
         c.post(reverse('flights:book', args=(f.id,)),
                {'passenger': passenger.id})
         self.assertEqual(f.passengers.count(), 1)
+    
+    def test_passenger_not_in_flight(self):
+        """ passenger not in database"""
+
+        passenger = Passenger.objects.create(
+            first="hemione", last="granger")
+        f = Flight.objects.first()
+        f.capacity = 2
+        f.save()
+
+        c = Client()
+        c.post(reverse('flights:book', args=(f.id,)),
+               {'passenger': passenger.id})
+        self.assertEqual(f.passengers.count(), 2)
+
+
